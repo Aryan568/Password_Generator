@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import "./App.css";
 
 function App() {
@@ -6,6 +6,8 @@ function App() {
   const [numberAllowed, setNumberAllowed] = useState(false);
   const [charAllowed, setCharAllowed] = useState(false);
   const [pass, setPass] = useState("");
+
+  const passRef= useRef(null)
 
   const passGen = useCallback(() => {
     let pass = "";
@@ -16,12 +18,17 @@ function App() {
 
     for (let i = 1; i <= length; i++) {
       let char = Math.floor(Math.random() * str.length + 1);
-      pass = str.charAt(char);
+      pass += str.charAt(char);
     }
     setPass(pass);
-  }, [length, numberAllowed, charAllowed, setPass]);
+  }, [length, numberAllowed, charAllowed, setPass]) 
 
-  passGen()
+  const copyPass= useCallback(()=> {
+    passRef.current?.select()
+    window.navigator.clipboard.writeText(pass)
+  }, [pass])
+
+  useEffect(()=> {passGen()}, [length, numberAllowed, charAllowed, passGen])
 
   return (
     <>
@@ -34,22 +41,23 @@ function App() {
             className="outline-none w-full py-1 px-3"
             placeholder="password"
             readOnly
+            ref={passRef}
           />
-          <button className="outline-none bg-blue-700 px-3 py-0.5 text-white shrink-0">
+          <button 
+          onClick={copyPass}
+          className="outline-none bg-blue-700 px-3 py-0.5 text-white shrink-0">
             Copy
           </button>
         </div>
-        <div className="flex text-sm gap-x-2">
-          <div className="flex items-center gap-x-1">
+        <div className='flex text-sm gap-x-2'>
+          <div className='flex items-center gap-x-1'>
             <input
               type="range"
               min={6}
-              max={100}
+              max={30}
               value={length}
-              className="cursor-pointer"
-              onChange={(e) => {
-                setLength(e.target.value);
-              }}
+              className='cursor-pointer'
+              onChange={(e) => {setLength(e.target.value)}}
             />
             <label>Length: {length}</label>
           </div>
