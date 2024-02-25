@@ -45,7 +45,7 @@ function App() {
           />
           <button 
           onClick={copyPass}
-          className="outline-none bg-blue-700 px-3 py-0.5 text-white shrink-0">
+          className="outline-none transition ease-in-out delay-150 bg-blue-700 hover:translate-y-1 hover:-scale-90 hover:bg-blue-500 px-3 py-0.5 text-white shrink-0">
             Copy
           </button>
         </div>
